@@ -1,0 +1,51 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 28
+
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets.main {
+        jni.srcDirs = []
+        jniLibs.srcDir rootProject.file('libs')
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs rootProject.file('libs')
+    }
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    implementation(name: 'RobotCore-release', ext: 'aar')
+    implementation(name: 'Hardware-release', ext: 'aar')
+    implementation(name: 'FtcCommon-release', ext: 'aar')
+    implementation(name: 'tensorflow-lite-0.0.0-nightly', ext:'aar')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+}
+

@@ -3,9 +3,8 @@
 package org.firstinspires.ftc.teamcode.legacy
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeoutOrNull
+import com.qualcomm.robotcore.util.ElapsedTime
+import kotlinx.coroutines.*
 import us.gotrobot.grbase.action.*
 import us.gotrobot.grbase.feature.toggleHeadingCorrection
 import us.gotrobot.grbase.opmode.RobotOpMode
@@ -33,36 +32,49 @@ fun cargoConditionalAction(left: Action, center: Action, right: Action) = action
     }
 }
 
+fun wait(duration: Long) = action {
+    val elapsedTime = ElapsedTime()
+    while (isActive && elapsedTime.milliseconds() < duration) {
+        yield()
+    }
+}
+
+fun initialAutoAction() = actionSequenceOf(
+        detectGoldPosition(GOLD_DETECTION_TIMEOUT),
+        extendLift(),
+        timeDrive(time = 200, power = 0.2),
+        biasedLateralDrive(distance = 20.0, bias = 0.05) with constantPower(0.35),
+        toggleHeadingCorrection(),
+        linearDrive(distance = 45.0) with constantPower(0.35),
+        cargoConditionalAction(
+                left = actionSequenceOf(
+                        lateralDrive(distance = -80.0) with constantPower(0.50),
+                        linearDrive(distance = 15.0) with constantPower(0.35),
+                        linearDrive(distance = -15.0) with constantPower(0.35)
+                ),
+                center = actionSequenceOf(
+                        lateralDrive(-25.0) with constantPower(0.35),
+                        linearDrive(distance = 45.0) with constantPower(0.35),
+                        linearDrive(-15.0) with constantPower(0.35)
+                ),
+                right = actionSequenceOf(
+                        lateralDrive(distance = 15.0) with constantPower(0.35),
+                        linearDrive(distance = 15.0) with constantPower(0.35)
+                )
+        )
+)
+
 private const val GOLD_DETECTION_TIMEOUT = 1500L
 
 @Autonomous(name = "Left Autonomous", group = "0_competitive")
 class LeftAutonomous: RobotOpMode() {
 
     override val action: Action = actionSequenceOf(
-            detectGoldPosition(GOLD_DETECTION_TIMEOUT),
-            extendLift(),
-            timeDrive(time = 200, power = 0.2),
-            biasedLateralDrive(distance = 20.0, bias = 0.05) with constantPower(0.35),
-            toggleHeadingCorrection(),
+            initialAutoAction(),
             cargoConditionalAction(
-                    left = actionSequenceOf(
-                            linearDrive(distance = 35.0) with constantPower(0.35),
-                            lateralDrive(distance = -75.0),
-                            linearDrive(distance = 15.0),
-                            lateralDrive(distance = -55.0)
-                    ),
-                    center = actionSequenceOf(
-                            linearDrive(distance = 75.0) with constantPower(0.35),
-                            linearDrive(distance = -25.0),
-                            lateralDrive(distance = -150.0)
-                    ),
-                    right = actionSequenceOf(
-                            linearDrive(distance = 45.0) with constantPower(0.35),
-                            lateralDrive(distance = 55.0),
-                            linearDrive(distance = 15.0),
-                            linearDrive(distance = -15.0),
-                            lateralDrive(distance = -200.0)
-                    )
+                    left = lateralDrive(distance = -55.0),
+                    center = lateralDrive(distance = -150.0),
+                    right = lateralDrive(distance = -200.0)
             ),
             turnTo(heading = 135.0) with constantPower(0.35),
             linearDrive(30.0),
@@ -82,39 +94,19 @@ class LeftAutonomous: RobotOpMode() {
 class RightAutonomous: RobotOpMode() {
 
     override val action: Action = actionSequenceOf(
-            detectGoldPosition(GOLD_DETECTION_TIMEOUT),
-            extendLift(),
-            timeDrive(time = 200, power = 0.2),
-            biasedLateralDrive(distance = 20.0, bias = 0.05) with constantPower(0.35),
-            toggleHeadingCorrection(),
+            initialAutoAction(),
             cargoConditionalAction(
-                    left = actionSequenceOf(
-                            linearDrive(distance = 40.0) with constantPower(0.35),
-                            lateralDrive(distance = -70.0),
-                            linearDrive(distance = 15.0),
-                            lateralDrive(distance = -55.0)
-                    ),
-                    center = actionSequenceOf(
-                            linearDrive(distance = 45.0) with constantPower(0.35),
-                            lateralDrive(-25.0),
-                            linearDrive(distance = 45.0) with constantPower(0.35),
-                            linearDrive(-15.0),
-                            lateralDrive(distance = 150.0)
-                    ),
-                    right = actionSequenceOf(
-                            linearDrive(distance = 45.0) with constantPower(0.35),
-                            lateralDrive(distance = 40.0),
-                            linearDrive(distance = 15.0),
-                            lateralDrive(distance = 55.0)
-                    )
+                    left = actionSequenceOf(wait(500), lateralDrive(distance = 225.0)),
+                    center = actionSequenceOf(wait(500), lateralDrive(distance = 150.0)),
+                    right = actionSequenceOf(wait(500), lateralDrive(distance = 55.0))
             ),
             turnTo(heading = -135.0) with constantPower(0.35),
             linearDrive(30.0),
             lateralDrive(-30.0),
-            linearDrive(145.0),
+            linearDrive(100.0),
             releaseMarker(),
-            linearDrive(-185.0),
-            turnTo(-90.0),
+            linearDrive(-155.0),
+            turnTo(-90.0) with constantPower(0.30),
             linearDrive(-300.0),
             turnTo(-45.0),
             lateralDrive(-45.0),
@@ -128,52 +120,7 @@ class RightAutonomous: RobotOpMode() {
 @Autonomous(name = "Back Autonomous", group = "0_competitive")
 class BackAutonomous: RobotOpMode() {
 
-    override val action: Action = actionSequenceOf(
-            detectGoldPosition(GOLD_DETECTION_TIMEOUT),
-            extendLift(),
-            timeDrive(time = 200, power = 0.2),
-            biasedLateralDrive(distance = 20.0, bias = 0.05) with constantPower(0.35),
-            toggleHeadingCorrection(),
-            cargoConditionalAction(
-                    left = actionSequenceOf(
-                            linearDrive(distance = 35.0) with constantPower(0.35),
-                            lateralDrive(distance = -75.0),
-                            linearDrive(distance = 60.0),
-                            turnTo(heading = -30.0) with constantPower(0.35),
-                            linearDrive(distance = 40.0),
-                            releaseMarker(),
-                            turnTo(-45.0),
-                            lateralDrive(-40.0) with constantPower(0.35),
-                            linearDrive(distance = -185.0),
-                            driveForever(power = -0.2)
-                    ),
-                    center = actionSequenceOf(
-                            lateralDrive(-20.0) with constantPower(0.35),
-                            linearDrive(distance = 165.0),
-                            releaseMarker(),
-                            linearDrive(distance = -75.0) with constantPower(0.5),
-                            turnTo(heading = 90.0) with constantPower(0.35),
-                            linearDrive(distance = 130.0),
-                            turnTo(heading = 135.0) with constantPower(0.25),
-                            lateralDrive(distance = 35.0),
-                            driveForever(power = 0.2)
-                    ),
-                    right = actionSequenceOf(
-                            linearDrive(distance = 35.0) with constantPower(0.35),
-                            lateralDrive(distance = 65.0),
-                            linearDrive(distance = 65.0),
-                            turnTo(45.0) with constantPower(0.35),
-                            linearDrive(30.0),
-                            releaseMarker(),
-                            linearDrive(-100.0),
-                            turnTo(heading = 90.0) with constantPower(0.35),
-                            linearDrive(distance = 250.0),
-                            turnTo(heading = 135.0) with constantPower(0.25),
-                            lateralDrive(distance = 35.0),
-                            driveForever(power = 0.2)
-                    )
-            )
-    )
+    override val action: Action = initialAutoAction()
 
     override suspend fun robot(): Robot = Metabot()
 

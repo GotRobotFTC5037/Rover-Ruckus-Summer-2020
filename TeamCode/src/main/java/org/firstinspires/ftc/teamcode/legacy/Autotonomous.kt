@@ -120,7 +120,28 @@ class RightAutonomous: RobotOpMode() {
 @Autonomous(name = "Back Autonomous", group = "0_competitive")
 class BackAutonomous: RobotOpMode() {
 
-    override val action: Action = initialAutoAction()
+    override val action: Action = actionSequenceOf(
+            detectGoldPosition(GOLD_DETECTION_TIMEOUT),
+            extendLift(),
+            timeDrive(time = 200, power = 0.2),
+            biasedLateralDrive(distance = 20.0, bias = 0.05) with constantPower(0.35),
+            toggleHeadingCorrection(),
+            linearDrive(distance = 45.0) with constantPower(0.35),
+            cargoConditionalAction(
+                    left = actionSequenceOf(
+                            lateralDrive(distance = -80.0) with constantPower(0.50),
+                            linearDrive(distance = 10.0) with constantPower(0.35)
+                    ),
+                    center = actionSequenceOf(
+                            lateralDrive(-25.0) with constantPower(0.35),
+                            linearDrive(distance = 35.0) with constantPower(0.35)
+                    ),
+                    right = actionSequenceOf(
+                            lateralDrive(distance = 80.0) with constantPower(0.35),
+                            linearDrive(distance = 10.0) with constantPower(0.35)
+                    )
+            )
+    )
 
     override suspend fun robot(): Robot = Metabot()
 

@@ -48,7 +48,7 @@ class TeleOp : CoroutineOpMode() {
                     (if (gamepad1.left_stick_button) 1.0 else 0.65) * (if (reversed) 1 else -1)
             val linearPower = -gamepad1.left_stick_y.toDouble() * multiplyer
             val lateralPower = gamepad1.left_stick_x.toDouble() * multiplyer
-            val rotationalPower = gamepad1.right_stick_x.toDouble()
+            val rotationalPower = gamepad1.right_stick_x.toDouble() * 0.9
             driveTrain.setDirectionPower(linearPower, lateralPower, rotationalPower)
         }
 

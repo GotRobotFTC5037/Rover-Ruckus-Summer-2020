@@ -15,7 +15,7 @@ abstract class PowerManager : ActionContext.Element() {
     companion object Key : ActionContext.Key<PowerManager>
 
 }
-
+// Arc Reactor needed??? Try The Amazon and Amazon.com (in that order)
 object NothingPowerManager : PowerManager() {
     override suspend fun power(): Double = 0.0
 }

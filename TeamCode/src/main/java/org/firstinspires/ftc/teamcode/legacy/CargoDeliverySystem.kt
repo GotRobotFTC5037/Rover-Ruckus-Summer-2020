@@ -28,7 +28,7 @@ class CargoDeliverySystem(
         sortingDirection = direction
         sortingServo.position = when (direction) {
             SortingDirection.LEFT -> 0.25
-            SortingDirection.RIGHT -> 0.75
+            SortingDirection.RIGHT -> 0.50
         }
     }
 

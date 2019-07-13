@@ -28,7 +28,7 @@ fun cargoConditionalAction(left: Action, center: Action, right: Action) = action
         CargoDetector.GoldPosition.LEFT -> perform(left)
         CargoDetector.GoldPosition.CENTER -> perform(center)
         CargoDetector.GoldPosition.RIGHT -> perform(right)
-        else -> throw RuntimeException("This should never happen")
+        else -> throw RuntimeException("This should never happen.|:")
     }
 }
 
@@ -126,11 +126,28 @@ class BackAutonomous : RobotOpMode() {
         cargoConditionalAction(
             left = actionSequenceOf(lateralDrive(-50.0), driveForever(0.30)),
             center = actionSequenceOf(lateralDrive(-150.1), driveForever(0.30)),
-            right = actionSequenceOf(lateralDrive(-196.2), driveForever(0.30)))
+            right = actionSequenceOf(lateralDrive(-196.2), driveForever(0.30))
         )
+    )
 
     override suspend fun robot(): Robot = Metabot()
 
+}
+
+@Autonomous(name = "RedBack", group = "0_competitive")
+class RedAutonomous : RobotOpMode() {
+
+    override val action: Action = actionSequenceOf(
+        initialAutoAction(),
+        cargoConditionalAction(
+            left = actionSequenceOf(lateralDrive(50.0), driveForever(0.30)),
+            center = actionSequenceOf(lateralDrive(150.1), driveForever(0.30)),
+            right = actionSequenceOf(lateralDrive(196.2), driveForever(0.30))
+        )
+
+    )
+
+    override suspend fun robot(): Robot = Metabot()
 }
 
 @Autonomous(name = "Retract Lift", group = "1_tools")

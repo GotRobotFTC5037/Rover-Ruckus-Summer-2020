@@ -45,10 +45,10 @@ fun initialAutoAction() = actionSequenceOf(
     timeDrive(time = 200, power = 0.2),
     biasedLateralDrive(distance = 20.0, bias = 0.05) with constantPower(0.35),
     toggleHeadingCorrection(),
-    linearDrive(distance = 44.5) with constantPower(0.35),
+    linearDrive(distance = 44.5) with constantPower(0.30),
     cargoConditionalAction(
         left = actionSequenceOf(
-            lateralDrive(distance = -80.0) with constantPower(0.50),//The first one for sample of the Rich $tuf
+            lateralDrive(distance = -80.0) with constantPower(0.45),//The first one for sample of the Rich $tuf
             linearDrive(distance = 30.0) with constantPower(0.35),
             linearDrive(distance = -30.0) with constantPower(0.35)
         ),
@@ -67,7 +67,7 @@ fun initialAutoAction() = actionSequenceOf(
 
 private const val GOLD_DETECTION_TIMEOUT = 1500L
 
-@Autonomous(name = "Left Autonomous", group = "0_competitive")
+@Autonomous(name = "BlueLeft", group = "0_competitive")
 class LeftAutonomous : RobotOpMode() {
 
     override val action: Action = actionSequenceOf(
@@ -91,7 +91,7 @@ class LeftAutonomous : RobotOpMode() {
 
 }
 
-@Autonomous(name = "Right Autonomous", group = "0_competitive")
+@Autonomous(name = "BlueRight", group = "0_competitive")
 class RightAutonomous : RobotOpMode() {
 
     override val action: Action = actionSequenceOf(
@@ -118,7 +118,7 @@ class RightAutonomous : RobotOpMode() {
 
 }
 
-@Autonomous(name = "Back Autonomous", group = "0_competitive")
+@Autonomous(name = "BlueBack", group = "0_competitive")
 class BackAutonomous : RobotOpMode() {
 
     override val action: Action = actionSequenceOf(
@@ -135,15 +135,38 @@ class BackAutonomous : RobotOpMode() {
 }
 
 @Autonomous(name = "RedBack", group = "0_competitive")
-class RedAutonomous : RobotOpMode() {
+class RedBackAutonomous : RobotOpMode() {
 
     override val action: Action = actionSequenceOf(
         initialAutoAction(),
         cargoConditionalAction(
-            left = actionSequenceOf(lateralDrive(50.0), driveForever(0.30)),
+            left = actionSequenceOf(lateralDrive(186.2), driveForever(0.30)),
             center = actionSequenceOf(lateralDrive(150.1), driveForever(0.30)),
-            right = actionSequenceOf(lateralDrive(196.2), driveForever(0.30))
+            right = actionSequenceOf(lateralDrive(50.0), driveForever(0.30))
         )
+
+    )
+
+    override suspend fun robot(): Robot = Metabot()
+}
+
+@Autonomous(name = "RedRight", group = "0_competitive")
+class RedRightAutonomous : RobotOpMode() {
+
+    override val action: Action = actionSequenceOf(
+        initialAutoAction(),
+        cargoConditionalAction(
+            left = lateralDrive(distance = 155.0),
+            center = lateralDrive(distance = 150.0),
+            right = lateralDrive(distance = 95.0)
+        ),
+        turnTo(heading = -135.0) with constantPower(0.35),
+        linearDrive(30.0),
+        lateralDrive(-60.0),
+        linearDrive(115.0),
+        releaseMarker(),
+        linearDrive(-175.0),
+        driveForever(-0.25)
 
     )
 

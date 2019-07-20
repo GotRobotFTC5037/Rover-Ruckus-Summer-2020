@@ -28,7 +28,7 @@ fun cargoConditionalAction(left: Action, center: Action, right: Action) = action
         CargoDetector.GoldPosition.LEFT -> perform(left)
         CargoDetector.GoldPosition.CENTER -> perform(center)
         CargoDetector.GoldPosition.RIGHT -> perform(right)
-        else -> throw RuntimeException("This should never happen.|:")
+        CargoDetector.GoldPosition.UNKNOWN -> perform(center)
     }
 }
 
@@ -49,18 +49,18 @@ fun initialAutoAction() = actionSequenceOf(
     cargoConditionalAction(
         left = actionSequenceOf(
             lateralDrive(distance = -80.0) with constantPower(0.45),//The first one for sample of the Rich $tuf
-            linearDrive(distance = 30.0) with constantPower(0.35),
-            linearDrive(distance = -30.0) with constantPower(0.35)
+            linearDrive(distance = 35.0) with constantPower(0.35),
+            linearDrive(distance = -35.0) with constantPower(0.35)
         ),
         center = actionSequenceOf(
-            lateralDrive(-25.0) with constantPower(0.35),//The first one for sample of the Soda Pop
-            linearDrive(distance = 40.0) with constantPower(0.35),
+            lateralDrive(-22.5) with constantPower(0.35),//The first one for sample of the Soda Pop
+            linearDrive(distance = 45.0) with constantPower(0.35),
             linearDrive(-35.0) with constantPower(0.35)
         ),
         right = actionSequenceOf(
             lateralDrive(distance = 60.0) with constantPower(0.50),//The first one for sample of the ice cream
-            linearDrive(distance = 15.0) with constantPower(0.35),
-            linearDrive(distance = -20.0) with constantPower(0.35)
+            linearDrive(distance = 20.0) with constantPower(0.35),
+            linearDrive(distance = -25.0) with constantPower(0.35)
         )
     )
 )
@@ -79,7 +79,7 @@ class LeftAutonomous : RobotOpMode() {
         ),
         turnTo(heading = 135.0) with constantPower(0.35),
         linearDrive(30.0),
-        lateralDrive(60.0),
+        lateralDrive(50.0),
         linearDrive(115.0),
         releaseMarker(),
         linearDrive(-175.0),
@@ -101,10 +101,10 @@ class RightAutonomous : RobotOpMode() {
             center = actionSequenceOf(wait(500), lateralDrive(distance = 150.0)),
             right = actionSequenceOf(wait(500), lateralDrive(distance = 55.0))
         ),
-        turnTo(heading = -135.0) with constantPower(0.35),
+        turnTo(heading = -135.0) with constantPower(0.30),
         linearDrive(30.0),
-        lateralDrive(-30.0),
-        linearDrive(100.0),
+        lateralDrive(-35.0),
+        linearDrive(110.0),
         releaseMarker(),
         linearDrive(-155.0),
         turnTo(-90.0) with constantPower(0.30),
@@ -162,7 +162,7 @@ class RedRightAutonomous : RobotOpMode() {
         ),
         turnTo(heading = -135.0) with constantPower(0.35),
         linearDrive(30.0),
-        lateralDrive(-60.0),
+        lateralDrive(-70.0),
         linearDrive(115.0),
         releaseMarker(),
         linearDrive(-175.0),
@@ -170,6 +170,30 @@ class RedRightAutonomous : RobotOpMode() {
 
     )
 
+    override suspend fun robot(): Robot = Metabot()
+}
+
+@Autonomous(name = "RedLeft", group = "0_competitive")
+class RedLeftAutonomous : RobotOpMode() {
+    override val action: Action = actionSequenceOf(
+            initialAutoAction(),
+            cargoConditionalAction(
+                    left = actionSequenceOf(wait(500), lateralDrive(distance = -55.0)),
+                    center = actionSequenceOf(wait(500), lateralDrive(distance = -150.0)),
+                    right = actionSequenceOf(wait(500), lateralDrive(distance = -255.0))
+            ),
+            turnTo(heading = 130.0) with constantPower(0.30),
+            linearDrive(30.0),
+            lateralDrive(30.0),
+            linearDrive(100.0),
+            releaseMarker(),
+            linearDrive(-165.0),
+            turnTo(90.0) with constantPower(0.30),
+            linearDrive(-300.0),
+            turnTo(45.0),
+            lateralDrive(45.0),
+            driveForever(-0.25)
+    )
     override suspend fun robot(): Robot = Metabot()
 }
 

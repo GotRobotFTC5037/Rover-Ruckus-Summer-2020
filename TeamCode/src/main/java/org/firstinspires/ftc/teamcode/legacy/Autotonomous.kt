@@ -48,19 +48,19 @@ fun initialAutoAction() = actionSequenceOf(
     linearDrive(distance = 44.5) with constantPower(0.30),
     cargoConditionalAction(
         left = actionSequenceOf(
-            lateralDrive(distance = -80.0) with constantPower(0.45),//The first one for sample of the Rich $tuf
+            lateralDrive(distance = -85.0) with constantPower(0.45),//The first one for sample of the Rich $tuf
             linearDrive(distance = 35.0) with constantPower(0.35),
             linearDrive(distance = -35.0) with constantPower(0.35)
         ),
         center = actionSequenceOf(
-            lateralDrive(-22.5) with constantPower(0.35),//The first one for sample of the Soda Pop
+            lateralDrive(-22.0) with constantPower(0.35),//The first one for sample of the Soda Pop
             linearDrive(distance = 45.0) with constantPower(0.35),
-            linearDrive(-35.0) with constantPower(0.35)
+            linearDrive(-40.0) with constantPower(0.35)
         ),
         right = actionSequenceOf(
             lateralDrive(distance = 60.0) with constantPower(0.50),//The first one for sample of the ice cream
-            linearDrive(distance = 20.0) with constantPower(0.35),
-            linearDrive(distance = -25.0) with constantPower(0.35)
+            linearDrive(distance = 25.0) with constantPower(0.35),
+            linearDrive(distance = -30.0) with constantPower(0.35)
         )
     )
 )
@@ -78,9 +78,9 @@ class LeftAutonomous : RobotOpMode() {
             right = lateralDrive(distance = -1.0)
         ),
         turnTo(heading = 135.0) with constantPower(0.35),
-        linearDrive(30.0),
-        lateralDrive(50.0),
-        linearDrive(115.0),
+        linearDrive(0.0),
+        lateralDrive(60.0),
+        linearDrive(145.0),
         releaseMarker(),
         linearDrive(-175.0),
         driveForever(-0.25)
@@ -102,13 +102,13 @@ class RightAutonomous : RobotOpMode() {
             right = actionSequenceOf(wait(500), lateralDrive(distance = 55.0))
         ),
         turnTo(heading = -135.0) with constantPower(0.30),
-        linearDrive(30.0),
-        lateralDrive(-35.0),
-        linearDrive(110.0),
+        linearDrive(10.0),
+        lateralDrive(-45.0),
+        linearDrive(130.0),
         releaseMarker(),
         linearDrive(-155.0),
-        turnTo(-90.0) with constantPower(0.30),
-        linearDrive(-300.0),
+        turnTo(-90.0) with constantPower(0.25),
+        linearDrive(-270.0),
         turnTo(-45.0),
         lateralDrive(-45.0),
         driveForever(-0.25)
@@ -124,9 +124,9 @@ class BackAutonomous : RobotOpMode() {
     override val action: Action = actionSequenceOf(
         initialAutoAction(),
         cargoConditionalAction(
-            left = actionSequenceOf(lateralDrive(-50.0), driveForever(0.30)),
-            center = actionSequenceOf(lateralDrive(-150.1), driveForever(0.30)),
-            right = actionSequenceOf(lateralDrive(-196.2), driveForever(0.30))
+            left = actionSequenceOf(lateralDrive(-25.0), driveForever(0.30)),
+            center = actionSequenceOf(lateralDrive(-135.1), driveForever(0.30)),
+            right = actionSequenceOf(lateralDrive(-175.2), driveForever(0.30))
         )
     )
 
@@ -140,9 +140,9 @@ class RedBackAutonomous : RobotOpMode() {
     override val action: Action = actionSequenceOf(
         initialAutoAction(),
         cargoConditionalAction(
-            left = actionSequenceOf(lateralDrive(186.2), driveForever(0.30)),
-            center = actionSequenceOf(lateralDrive(150.1), driveForever(0.30)),
-            right = actionSequenceOf(lateralDrive(50.0), driveForever(0.30))
+            left = actionSequenceOf(lateralDrive(156.2), driveForever(0.30)),
+            center = actionSequenceOf(lateralDrive(110.1), driveForever(0.30)),
+            right = actionSequenceOf(lateralDrive(25.0), driveForever(0.30))
         )
 
     )
@@ -184,15 +184,15 @@ class RedLeftAutonomous : RobotOpMode() {
             ),
             turnTo(heading = 130.0) with constantPower(0.30),
             linearDrive(30.0),
-            lateralDrive(30.0),
+            lateralDrive(15.0),
             linearDrive(100.0),
             releaseMarker(),
-            linearDrive(-165.0),
+            linearDrive(-130.0),
             turnTo(90.0) with constantPower(0.30),
-            linearDrive(-300.0),
+            linearDrive(-280.0) with constantPower(0.95),
             turnTo(45.0),
-            lateralDrive(45.0),
-            driveForever(-0.25)
+            lateralDrive(20.0),
+            driveForever(-0.25) with constantPower(0.35)
     )
     override suspend fun robot(): Robot = Metabot()
 }

@@ -5,14 +5,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
-import us.gotrobot.grbase.action.ActionScope
-import us.gotrobot.grbase.action.feature
-import us.gotrobot.grbase.action.linearDrive
-import us.gotrobot.grbase.action.perform
+import us.gotrobot.grbase.action.*
 import us.gotrobot.grbase.feature.HeadingCorrection
 import us.gotrobot.grbase.feature.drivetrain.MecanumDriveTrain
 import us.gotrobot.grbase.opmode.CoroutineOpMode
 import us.gotrobot.grbase.robot.Robot
+import us.gotrobot.grbase.robot.robot
+import us.gotrobot.grbase.robot.install
+import us.gotrobot.grbase.feature.drivetrain.MecanumDriveTrain.Localizer
+import us.gotrobot.grbase.feature.drivetrain.mecanumDriveTrain
 
 typealias DriverControl = TeleOp
 
@@ -46,7 +47,7 @@ class TeleOp : CoroutineOpMode() {
 
         loop {
             val multiplyer =
-                    (if (gamepad1.left_stick_button) 1.0 else 0.65) * (if (reversed) 1 else -1)
+                (if (gamepad1.left_stick_button) 1.0 else 0.65) * (if (reversed) 1 else -1)
             val linearPower = -gamepad1.left_stick_y.toDouble() * multiplyer
             val lateralPower = gamepad1.left_stick_x.toDouble() * multiplyer
             val rotationalPower = gamepad1.right_stick_x.toDouble() * 0.9
@@ -62,11 +63,22 @@ class TeleOp : CoroutineOpMode() {
             }
         }
 
-        loop {
-            if (gamepad1.dpad_up) {
-
-            }
-        }
+//        loop {
+//            if (gamepad1.dpad_up) {
+//                perform(
+//                    actionSequenceOf(
+//                        linearDrive(-50.0),
+//                        lateralDrive(15.0),
+//                        turnTo(-45.0),
+//                        linearDrive(-200.0),
+//                        turnTo(45.0),
+//                        linearDrive(-15.0)
+//                    )
+//                )
+//
+//            }
+//            suspend fun robot(): Robot = Metabot()
+//        }
 
 
         loop {

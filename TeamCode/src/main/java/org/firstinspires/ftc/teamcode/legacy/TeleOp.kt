@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import us.gotrobot.grbase.action.ActionScope
 import us.gotrobot.grbase.action.feature
+import us.gotrobot.grbase.action.linearDrive
 import us.gotrobot.grbase.action.perform
 import us.gotrobot.grbase.feature.HeadingCorrection
 import us.gotrobot.grbase.feature.drivetrain.MecanumDriveTrain
@@ -60,6 +61,13 @@ class TeleOp : CoroutineOpMode() {
                 }
             }
         }
+
+        loop {
+            if (gamepad1.dpad_up) {
+
+            }
+        }
+
 
         loop {
             when {
